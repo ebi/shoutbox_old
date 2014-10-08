@@ -1,0 +1,3 @@
+module.exports = {
+  secret: 'Deus traegt gerne Strappsen',
+};

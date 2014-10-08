@@ -1,26 +1,35 @@
 require('node-jsx').install({ extension: '.jsx' });
 
+var appConf = require('./configs/app');
 var Application = require('./app');
+var bodyParser = require('body-parser');
 var debug = require('debug')('Shoutbox');
 var express = require('express');
 var expressState = require('express-state');
+var login = require('./middleware/login');
+var mybbSession = require('./middleware/mybbSession');
 var navigateAction = require('flux-router-component').navigateAction;
 var React = require('react/addons');
+var session = require('express-session');
 
 debug('Initializing server');
 var app = express();
 expressState.extend(app);
+app.set('state namespace', 'App');
 app.set('views', __dirname + '/templates');
 app.set('view engine', 'jade');
 
 app.use(express.static(__dirname + '/build'));
-
+app.use(session({ secret: appConf.secret }));
+app.use(bodyParser.urlencoded());
+app.use('/login', login);
+app.use(mybbSession);
 app.use(function (req, res, next) {
     var application = new Application();
-
     debug('Executing navigate action');
     application.context.getActionContext().executeAction(navigateAction, {
-        path: req.url
+        session: req.session,
+        path: req.url,
     }, function (err) {
         if (err) {
             if (err.status && err.status === 404) {
