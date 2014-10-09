@@ -9,6 +9,9 @@
   "author": "Tobias 'ebi' Ebnöther <ebi@gorn.ch>",
   "license": "All rights reserved",
   "private": true,
+  "engines": {
+    "node": "0.10.x"
+  },
   "dependencies": {
     "body-parser": "^1.9.0",
     "cookie": "^0.1.2",
