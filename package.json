@@ -1,5 +1,5 @@
 {
-  "name": "raisech_shoutbox",
+  "name": "raisech-shoutbox",
   "version": "0.0.0",
   "description": "Better client for the shoutbox",
   "main": "server.js",
@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "body-parser": "^1.9.0",
+    "connect-redis": "^2.1.0",
     "cookie": "^0.1.2",
     "debug": "^2.0.0",
     "dispatchr": "^0.2.5",
@@ -25,6 +26,7 @@
     "jade": "^1.7.0",
     "node-jsx": "^0.11.0",
     "react": "^0.11.2",
+    "redis": "^0.12.1",
     "routr": "0.0.3",
     "rsvp": "^3.0.14",
     "superagent": "^0.20.0",

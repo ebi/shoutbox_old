@@ -12,6 +12,16 @@ var navigateAction = require('flux-router-component').navigateAction;
 var React = require('react/addons');
 var session = require('express-session');
 
+if (process.env.REDISTOGO_URL) {
+  var rtg   = require('url').parse(process.env.REDISTOGO_URL);
+  var redis = require('redis').createClient(rtg.port, rtg.hostname);
+
+  redis.auth(rtg.auth.split(':')[1]);
+} else {
+  var redis = require('redis').createClient();
+}
+var RedisStore = require('connect-redis')(session);
+
 debug('Initializing server');
 var app = express();
 expressState.extend(app);
@@ -20,7 +30,10 @@ app.set('views', __dirname + '/templates');
 app.set('view engine', 'jade');
 
 app.use(express.static(__dirname + '/build'));
-app.use(session({ secret: appConf.secret }));
+app.use(session({
+  store: new RedisStore({ client: redis }),
+  secret: appConf.secret,
+}));
 app.use(bodyParser.urlencoded());
 app.use('/login', login);
 app.use(mybbSession);
