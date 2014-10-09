@@ -1,7 +1,7 @@
 require('node-jsx').install({ extension: '.jsx' });
 
 var appConf = require('./configs/app');
-var Application = require('./app');
+var Application = require('./App');
 var bodyParser = require('body-parser');
 var debug = require('debug')('Shoutbox');
 var express = require('express');
