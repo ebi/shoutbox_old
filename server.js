@@ -9,9 +9,11 @@ var expressState = require('express-state');
 var login = require('./middleware/login');
 var mybbSession = require('./middleware/mybbSession');
 var navigateAction = require('flux-router-component').navigateAction;
+var ShoutboxPoll = require('./server/ShoutboxPoll');
 var React = require('react/addons');
 var session = require('express-session');
 
+debug('Setting up redis');
 if (process.env.REDISTOGO_URL) {
   var rtg   = require('url').parse(process.env.REDISTOGO_URL);
   var redis = require('redis').createClient(rtg.port, rtg.hostname);
@@ -21,6 +23,16 @@ if (process.env.REDISTOGO_URL) {
   var redis = require('redis').createClient();
 }
 var RedisStore = require('connect-redis')(session);
+
+debug('Setting up rabbitmq');
+var amqpUrl = process.env.CLOUDAMQP_URL || 'amqp://localhost';
+var amqpOpen = require('amqplib').connect(amqpUrl)
+    .then(null, function () {
+        debug('Could not connect to rabbitmq.');
+        process.exit(1);
+    });
+
+new ShoutboxPoll(amqpOpen);
 
 debug('Initializing server');
 var app = express();

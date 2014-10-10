@@ -1,43 +1,5 @@
-var _ = require('underscore');
-var cookie = require('cookie');
 var debug = require('debug')('Shoutbox:Login');
-var request = require('superagent');
-var RSVP = require('rsvp');
-
-function getMybbSession (session, username, password) {
-  return new RSVP.Promise(function (resolve, reject) {
-    debug('Login attemp for', username);
-    request
-      .post('http://raise.ch/forum/member.php')
-      .type('form')
-      .send({
-        action: 'do_login',
-        remember: 'yes',
-        username: username,
-        password: password,
-      })
-      .end(function (err, res) {
-        if (err) {
-          debug('Login Failure', err);
-          reject(err);
-        } else {
-          var cookies = res.header['set-cookie'].map(cookie.parse);
-          var superCookie = _.extend.apply(_, cookies);
-          debug(superCookie);
-          if (superCookie.mybbuser && superCookie.sid) {
-            debug('Login Attemp Successful for', username);
-            session.mybbuser = superCookie.mybbuser;
-            session.sid = superCookie.sid;
-            session.validated = true;
-            resolve();
-          } else {
-            debug('Login Attemp Failed for', username);
-            reject();
-          }
-        }
-      });
-  });
-}
+var mybbSession = require('../server/mybbSession');
 
 module.exports = function (req, res) {
   var user = req.body.username;
@@ -70,8 +32,12 @@ module.exports = function (req, res) {
   }
 
   if (req.method === 'POST') {
-    getMybbSession(req.session, user, pass)
-      .then(redirect, renderForm);
+    mybbSession(req.session, user, pass)
+      .then(function (mybb) {
+        req.session.mybbuser = mybb.mybbuser;
+        req.session.sid = mybb.sid;
+        req.session.validated = true;
+      }, renderForm);
   } else {
     renderForm();
   }
