@@ -1,3 +1,4 @@
+var amqpConf = require('../configs/amqp');
 var appConf = require('../configs/app');
 var debug = require('debug')('Shoutbox:ShoutboxPoll');
 var moment = require('moment');
@@ -5,7 +6,6 @@ var mybbSession = require('./mybbSession.js');
 var request = require('superagent');
 var RSVP = require('rsvp');
 
-var queue = appConf.messagesQueue;
 var parseRegexp = /shout-(\d*)\'><td[^>]*><span[^>]*>&raquo; &nbsp;&nbsp;(\d{2}\.\d{2} - \d{2}:\d{2})\s*- <\/span><span[^>]*> (.*?):<\/span><\/td><td[^>]*><\/span[^>]*>(.*?)<\/span><\/td><\/tr>/; // jshint ignore:line
 var nameExtractRegexp = /<.*?>/g;
 
@@ -15,8 +15,7 @@ function publishMessage(channel, message) {
   }
   var content = new Buffer(JSON.stringify(message));
   debug('Publishing message', message.id);
-  channel.assertQueue(queue);
-  channel.sendToQueue(queue, content);
+  channel.publish(appConf.messagesExchange, '', content);
 }
 
 var ShoutboxPoll = function (amqpOpen) {
@@ -65,13 +64,9 @@ var ShoutboxPoll = function (amqpOpen) {
       }.bind(this, mybb));
   }
 
-  var amqpChannel = amqpOpen
-    .then(function (conn) {
-      debug('Creating rabbitmq channel');
-      return conn.createChannel();
-    }, debug);
 
-  RSVP.all([amqpChannel, getSession()])
+
+  RSVP.all([amqpConf.messages(amqpOpen), getSession()])
     .then(startPoll, function () {
       // TODO: Reconnect
       throw new Error('Could not login polling user');

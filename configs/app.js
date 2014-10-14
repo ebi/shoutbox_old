@@ -1,4 +1,4 @@
 module.exports = {
-  messagesQueue: 'messages',
+  messagesExchange: 'messages',
   secret: process.env.SESSION_SECRET || 'no secure',
 };

@@ -7,11 +7,13 @@ var debug = require('debug')('Shoutbox');
 var express = require('express');
 var expressState = require('express-state');
 var login = require('./middleware/login');
+var mongoose = require('mongoose');
+var MongoStore = require('./server/MongoStore');
 var mybbSession = require('./middleware/mybbSession');
 var navigateAction = require('flux-router-component').navigateAction;
-var ShoutboxPoll = require('./server/ShoutboxPoll');
 var React = require('react/addons');
 var session = require('express-session');
+var ShoutboxPoll = require('./server/ShoutboxPoll');
 
 debug('Setting up redis');
 if (process.env.REDISTOGO_URL) {
@@ -27,12 +29,27 @@ var RedisStore = require('connect-redis')(session);
 debug('Setting up rabbitmq');
 var amqpUrl = process.env.CLOUDAMQP_URL || 'amqp://localhost';
 var amqpOpen = require('amqplib').connect(amqpUrl)
-    .then(null, function () {
-        debug('Could not connect to rabbitmq.');
-        process.exit(1);
-    });
+  .then(null, function () {
+    debug('Could not connect to rabbitmq.');
+    process.exit(1);
+  });
 
-new ShoutboxPoll(amqpOpen);
+debug('Setting up MongoDB');
+var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/shoutbox';
+mongoose.connect(mongoUrl, function (err) {
+  if (err) {
+    debug('Could not connect to MongoDB');
+  } else {
+    debug('Setup MongoDB');
+  }
+});
+
+debug('Setting up MongoStore Instance');
+new MongoStore(amqpOpen)
+  .then(function setupShoutboxPoll () {
+    debug('Setting up ShoutboxPoll Instance');
+    new ShoutboxPoll(amqpOpen);
+  }, debug);
 
 debug('Initializing server');
 var app = express();
