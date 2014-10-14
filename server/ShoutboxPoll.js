@@ -1,5 +1,6 @@
 var appConf = require('../configs/app');
 var debug = require('debug')('Shoutbox:ShoutboxPoll');
+var moment = require('moment');
 var mybbSession = require('./mybbSession.js');
 var request = require('superagent');
 var RSVP = require('rsvp');
@@ -54,7 +55,7 @@ var ShoutboxPoll = function (amqpOpen) {
           }
           var messageObj = {
             id: parsedMsg[1],
-            time: parsedMsg[2],
+            time: moment(parsedMsg[2], 'DD.MM - HH:mm'),
             username: parsedMsg[3].replace(nameExtractRegexp, ''),
             message: parsedMsg[4],
           };
