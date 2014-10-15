@@ -4,9 +4,16 @@ var messageSchema = new mongoose.Schema({
   id: {
     type: Number,
     unique: true,
+    index: true,
   },
-  time: Date,
-  username: String,
+  time: {
+    type: Date,
+    index: true,
+  },
+  username: {
+    type: String,
+    index: true,
+  },
   message: String,
 });
 
