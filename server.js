@@ -13,6 +13,8 @@ var MongoStore = require('./server/MongoStore');
 var mybbSession = require('./middleware/mybbSession');
 var navigateAction = require('flux-router-component').navigateAction;
 var React = require('react/addons');
+var routes = require('./configs/routes');
+var RSVP = require('RSVP');
 var session = require('express-session');
 var ShoutboxPoll = require('./server/ShoutboxPoll');
 
@@ -97,19 +99,34 @@ app.use(function (req, res, next) {
       }
       return;
     }
-    debug('Rendering Application component');
-    var html = React.renderComponentToString(application.getComponent());
-    debug('Exposing context state');
-    res.expose(application.context.dehydrate(), 'Context');
-    debug('Rendering application into layout');
-    res.render('layout', {
-      html: html
-    }, function (err, markup) {
-      if (err) {
-        next(err);
-      }
-      debug('Sending markup');
-      res.send(markup);
+
+    var context = application.context;
+    var appStore = context.dispatcher.getStore('ApplicationStore');
+    var pageName = appStore.getCurrentPageName();
+    var currentRoute = routes[pageName];
+    var waits = [];
+
+    currentRoute.waitFor.forEach(function (wait) {
+      var deferred = RSVP.defer();
+      context.getActionContext().executeAction(wait, null, deferred.resolve);
+      waits.push(deferred.promise);
+    });
+
+    RSVP.all(waits).then(function () {
+      debug('Rendering Application component');
+      var html = React.renderComponentToString(application.getComponent());
+      debug('Exposing context state');
+      res.expose(application.context.dehydrate(), 'Context');
+      debug('Rendering application into layout');
+      res.render('layout', {
+        html: html
+      }, function (err, markup) {
+        if (err) {
+          next(err);
+        }
+        debug('Sending markup');
+        res.send(markup);
+      });
     });
   });
 });

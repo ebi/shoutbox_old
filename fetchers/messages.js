@@ -6,7 +6,6 @@ module.exports = {
   name: 'messages',
   read: function (req, resource, params, config, callback) {
     var query = Message.find().sort({ id: 'asc' });
-      console.log(arguments);
     query.exec(function (err, results) {
       var ret = { messages: [] };
       if (!err) {

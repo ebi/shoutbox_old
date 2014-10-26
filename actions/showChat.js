@@ -1,6 +1,6 @@
 'use strict';
 
-var debug = require('debug')('Shotbox:showChatAction');
+var debug = require('debug')('Shoutbox:showChatAction');
 
 module.exports = function (context, payload, done) {
     context.dispatch('SHOW_CHAT_START');

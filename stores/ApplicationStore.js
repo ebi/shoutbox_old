@@ -1,6 +1,6 @@
 var debug = require('debug')('Shoutbox:ApplicationStore');
 var EventEmitter = require('events').EventEmitter;
-var routes = '../configs/routes';
+var routes = require('../configs/routes');
 var util = require('util');
 
 function ApplicationStore() {
@@ -39,9 +39,6 @@ ApplicationStore.prototype.getCurrentPageName = function () {
 ApplicationStore.prototype.getState = function () {
   return {
     currentPageName: this.currentPageName,
-    currentPage: this.currentPage,
-    pages: this.pages,
-    route: this.currentRoute
   };
 };
 
@@ -51,9 +48,6 @@ ApplicationStore.prototype.dehydrate = function () {
 
 ApplicationStore.prototype.rehydrate = function (state) {
   this.currentPageName = state.currentPageName;
-  this.currentPage = state.currentPage;
-  this.pages = state.pages;
-  this.currentRoute = state.route;
 };
 
 module.exports = ApplicationStore;

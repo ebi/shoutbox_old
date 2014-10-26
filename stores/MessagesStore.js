@@ -29,7 +29,6 @@ MessagesStore.prototype.receiveMessages = function receiveMessages (messages) {
     msgs.forEach(function pushMessages (msg) {
         this.messages.push(msg);
     }, this);
-    console.log(this.messages);
     this.emitChange();
 };
 
