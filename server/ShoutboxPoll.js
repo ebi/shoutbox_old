@@ -60,7 +60,9 @@ var ShoutboxPoll = function (amqpOpen) {
           };
           publishMessage(channel, messageObj);
         });
-        setTimeout(startPoll.bind(this, args), 250);
+        if (!process.env.NOPOLL) {
+          setTimeout(startPoll.bind(this, args), 250);
+        }
       }.bind(this, mybb));
   }
 
