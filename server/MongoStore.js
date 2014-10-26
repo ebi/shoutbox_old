@@ -1,11 +1,23 @@
 var amqpConf = require('../configs/amqp');
-var debug = require('debug')('Shoutbox:MongoStore');
 var appConf = require('../configs/app');
+var debug = require('debug')('Shoutbox:MongoStore');
 var Message = require('../models/Message');
+var sanitizeHtml = require('sanitize-html');
+var smilies = require('../configs/smilies');
 
+var imgRegexp = /<img.*title="([^"]*).*?\/>/;
 
 function storeMessage(channel, msg) {
   var messageObj = JSON.parse(msg.content.toString());
+  var messageStr = messageObj.message;
+  messageStr = messageStr.replace(imgRegexp, function replaceImg (full, match) {
+    return smilies[match] || '';
+  });
+  messageStr = sanitizeHtml(messageStr, {
+    allowedTags: [],
+  });
+  messageObj.message = messageStr;
+
   debug('Saving message %s', messageObj.id);
   var message = new Message(messageObj);
   message.save(function (err) {

@@ -32,6 +32,7 @@
     "redis": "^0.12.1",
     "routr": "0.0.3",
     "rsvp": "^3.0.14",
+    "sanitize-html": "^1.4.3",
     "superagent": "^0.20.0",
     "underscore": "^1.7.0"
   },
