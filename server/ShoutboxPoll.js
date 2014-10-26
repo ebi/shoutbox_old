@@ -15,7 +15,7 @@ function publishMessage(channel, message) {
   }
   var content = new Buffer(JSON.stringify(message));
   debug('Publishing message', message.id);
-  channel.publish(appConf.messagesExchange, '', content);
+  channel.publish(appConf.messagesExchange, 'messages', content);
 }
 
 var ShoutboxPoll = function (amqpOpen) {
