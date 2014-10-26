@@ -14,7 +14,7 @@ var mybbSession = require('./middleware/mybbSession');
 var navigateAction = require('flux-router-component').navigateAction;
 var React = require('react/addons');
 var routes = require('./configs/routes');
-var RSVP = require('RSVP');
+var RSVP = require('rsvp');
 var session = require('express-session');
 var ShoutboxPoll = require('./server/ShoutboxPoll');
 
