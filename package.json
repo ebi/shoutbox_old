@@ -13,30 +13,30 @@
     "node": "0.10.x"
   },
   "dependencies": {
-    "amqplib": "^0.2.1",
-    "body-parser": "^1.9.0",
+    "amqplib": "^0.3.0",
+    "body-parser": "^1.9.1",
     "connect-redis": "^2.1.0",
     "cookie": "^0.1.2",
-    "debug": "^2.0.0",
-    "dispatchr": "^0.2.5",
-    "express": "^4.9.5",
-    "express-session": "^1.8.2",
+    "debug": "^2.1.0",
+    "dispatchr": "^0.2.7",
+    "express": "^4.10.0",
+    "express-session": "^1.9.1",
     "express-state": "^1.2.0",
-    "fetchr": "^0.3.0",
-    "flux-router-component": "^0.2.2",
+    "fetchr": "^0.4.0",
+    "flux-router-component": "^0.3.0",
     "jade": "^1.7.0",
     "moment": "^2.8.3",
-    "mongoose": "^3.8.17",
+    "mongoose": "^3.8.18",
     "node-jsx": "^0.11.0",
     "react": "^0.11.2",
     "redis": "^0.12.1",
-    "routr": "0.0.3",
+    "routr": "0.0.4",
     "rsvp": "^3.0.14",
     "sanitize-html": "^1.4.3",
     "superagent": "^0.20.0",
     "underscore": "^1.7.0"
   },
   "devDependencies": {
-    "webpack": "^1.4.4"
+    "webpack": "*"
   }
 }
