@@ -1,5 +1,6 @@
 /** @jsx React.DOM */
 var ChatMessage = require('./ChatMessage.jsx');
+var messageListener = require('../actions/messageListener');
 var MessagesStore = require('../stores/MessagesStore');
 var React = require('react/addons');
 var showChat = require('../actions/showChat');
@@ -22,10 +23,12 @@ module.exports = React.createClass({
     if (this.MessagesStore.lastID() === 0) {
       this.props.context.executeAction(showChat);
     }
+    this.props.context.executeAction(messageListener.startListening);
   },
 
   componentWillUnmount: function() {
     this.MessagesStore.removeChangeListener(this._onChange);
+    this.props.context.executeAction(messageListener.stopListening);
   },
 
   _onChange: function() {

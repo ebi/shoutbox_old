@@ -68,7 +68,7 @@ var ShoutboxPoll = function (amqpOpen) {
 
 
 
-  RSVP.all([amqpConf.messages(amqpOpen), getSession()])
+  RSVP.all([amqpConf.messagesExchange(amqpOpen), getSession()])
     .then(startPoll, function () {
       // TODO: Reconnect
       throw new Error('Could not login polling user');

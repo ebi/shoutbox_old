@@ -7,7 +7,9 @@ var debug = require('debug')('Shoutbox');
 var express = require('express');
 var expressState = require('express-state');
 var Fetcher = require('fetchr');
+var http = require('http');
 var login = require('./middleware/login');
+var MessageListener = require('./server/MessageListener');
 var mongoose = require('mongoose');
 var MongoStore = require('./server/MongoStore');
 var mybbSession = require('./middleware/mybbSession');
@@ -56,6 +58,8 @@ new MongoStore(amqpOpen)
 
 debug('Initializing server');
 var app = express();
+var server = http.createServer(app);
+
 expressState.extend(app);
 app.set('state namespace', 'App');
 app.set('views', __dirname + '/templates');
@@ -71,6 +75,14 @@ app.use(bodyParser.urlencoded());
 //Ensure Login
 app.use('/login', login);
 app.use(mybbSession);
+
+// Setup socket.io
+debug('Setting up socket.io');
+var io = require('socket.io').listen(server);
+io.on('connection', function (socket) {
+  debug('New socket.io connection');
+  new MessageListener(amqpOpen, socket);
+});
 
 //Fetchers
 Fetcher.registerFetcher(require('./fetchers/messages'));
@@ -132,5 +144,5 @@ app.use(function (req, res, next) {
 });
 
 const PORT = process.env.PORT || 3030;
-app.listen(PORT);
+server.listen(PORT);
 debug('Listening on port: ' + PORT);

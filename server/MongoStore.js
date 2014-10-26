@@ -1,23 +1,10 @@
 var amqpConf = require('../configs/amqp');
-var appConf = require('../configs/app');
 var debug = require('debug')('Shoutbox:MongoStore');
 var Message = require('../models/Message');
-var sanitizeHtml = require('sanitize-html');
-var smilies = require('../configs/smilies');
-
-var imgRegexp = /<img.*title="([^"]*).*?\/>/;
+var messageUtil = require('../utils/message');
 
 function storeMessage(channel, msg) {
-  var messageObj = JSON.parse(msg.content.toString());
-  var messageStr = messageObj.message;
-  messageStr = messageStr.replace(imgRegexp, function replaceImg (full, match) {
-    return smilies[match] || '';
-  });
-  messageStr = sanitizeHtml(messageStr, {
-    allowedTags: [],
-  });
-  messageObj.message = messageStr;
-
+  var messageObj = messageUtil.parse(msg);
   debug('Saving message %s', messageObj.id);
   var message = new Message(messageObj);
   message.save(function (err) {
@@ -31,22 +18,12 @@ function storeMessage(channel, msg) {
 
 function MongoStore(amqpOpen) {
   debug('Setting up mongo store');
-  return amqpConf.messages(amqpOpen)
+  return amqpConf.messagesChannel(amqpOpen)
     .then(function (channel) {
-      debug('Setting up queue');
-      return channel.assertQueue('messages')
-        .then(function (qok) {
-          debug('Binding queue');
-          return channel.bindQueue(qok.queue, appConf.messagesExchange, '')
-            .then(function () {
-              debug('Bound queue %s', qok.queue);
-              return qok.queue;
-            }, debug);
-        }, debug)
-        .then(function (queue) {
-          debug('Consuming queue');
-          channel.consume(queue, storeMessage.bind(null, channel));
-        }, debug);
+      var queue = {
+        name: 'messages',
+      };
+      return amqpConf.messagesConsumer(channel, queue, storeMessage);
     }, debug);
 }
 
