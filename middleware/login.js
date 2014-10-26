@@ -1,7 +1,7 @@
 var debug = require('debug')('Shoutbox:Login');
 var mybbSession = require('../server/mybbSession');
 
-module.exports = function (req, res) {
+module.exports = function (req, res, next) {
   var user = req.body.username;
   var pass = req.body.password;
 
@@ -32,11 +32,12 @@ module.exports = function (req, res) {
   }
 
   if (req.method === 'POST') {
-    mybbSession(req.session, user, pass)
+    mybbSession(user, pass)
       .then(function (mybb) {
         req.session.mybbuser = mybb.mybbuser;
         req.session.sid = mybb.sid;
         req.session.validated = true;
+        next();
       }, renderForm);
   } else {
     renderForm();
