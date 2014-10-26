@@ -2,11 +2,11 @@ module.exports = {
   home: {
     path: '/',
     method: 'get',
-    page: 'index',
+    page: 'home',
   },
-  login: {
-    path: '/login',
+  online: {
+    path: '/online',
     method: 'get',
-    page: 'login',
+    page: 'online',
   }
 };
