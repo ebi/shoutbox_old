@@ -1,5 +1,3 @@
-var webpack = require('webpack');
-
 module.exports = {
     entry: "./client.js",
     output: {
@@ -12,7 +10,4 @@ module.exports = {
             { test: /\.jsx$/, loader: 'jsx-loader' }
         ]
     },
-    plugins: [
-        new webpack.optimize.UglifyJsPlugin()
-    ]
 };
