@@ -6,6 +6,7 @@ var bodyParser = require('body-parser');
 var debug = require('debug')('Shoutbox');
 var express = require('express');
 var expressState = require('express-state');
+var latest = require('./server/latest');
 var login = require('./middleware/login');
 var mongoose = require('mongoose');
 var MongoStore = require('./server/MongoStore');
@@ -64,8 +65,19 @@ app.use(session({
   secret: appConf.secret,
 }));
 app.use(bodyParser.urlencoded());
+
+//Ensure Login
 app.use('/login', login);
 app.use(mybbSession);
+
+// Server side
+var router = new express.Router();
+router.route('/latest')
+  .get(latest);
+
+app.use(router);
+
+// Isomorphic Side
 app.use(function (req, res, next) {
     var application = new Application();
     debug('Executing navigate action');
