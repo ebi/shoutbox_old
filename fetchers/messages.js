@@ -10,7 +10,7 @@ module.exports = {
       var ret = { messages: [] };
       if (!err) {
         results.forEach(function (msg) {
-          ret.messages.push(_.pick(msg, 'time', 'username', 'message'));
+          ret.messages.push(_.pick(msg, 'id', 'time', 'username', 'message'));
         });
       } else {
         debug(err);

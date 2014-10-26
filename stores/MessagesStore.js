@@ -19,11 +19,7 @@ MessagesStore.prototype.receiveMessages = function receiveMessages (messages) {
     debug('Received messages', messages);
     var msgs = messages.messages;
     msgs = msgs.sort(function sortMessages (a, b) {
-        if (a.id < b.id) {
-            return -1;
-        } else {
-            return 1;
-        }
+        return a.id - b.id;
     });
 
     msgs.forEach(function pushMessages (msg) {

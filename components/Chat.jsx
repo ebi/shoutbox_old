@@ -1,6 +1,7 @@
 /** @jsx React.DOM */
-var React = require('react/addons');
+var ChatMessage = require('./ChatMessage.jsx');
 var MessagesStore = require('../stores/MessagesStore');
+var React = require('react/addons');
 var showChat = require('../actions/showChat');
 
 module.exports = React.createClass({
@@ -30,6 +31,15 @@ module.exports = React.createClass({
   },
 
   render: function render () {
-    return <h1>Chat</h1>;
+    var messages = this.state.messages.map(function (message) {
+      return <ChatMessage key={message.id} message={message} />;
+    });
+    if (messages.length === 0) {
+      messages = <div>Loading…</div>;
+    }
+    return (<div>
+      <h1>Chat</h1>
+      {messages}
+    </div>);
   },
 });
