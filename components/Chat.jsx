@@ -19,7 +19,9 @@ module.exports = React.createClass({
 
   componentDidMount: function() {
     this.MessagesStore.addChangeListener(this._onChange);
-    this.props.context.executeAction(showChat);
+    if (this.MessagesStore.lastID() === 0) {
+      this.props.context.executeAction(showChat);
+    }
   },
 
   componentWillUnmount: function() {

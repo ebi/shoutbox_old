@@ -74,13 +74,13 @@ app.use(mybbSession);
 
 //Fetchers
 Fetcher.registerFetcher(require('./fetchers/messages'));
-app.use(appConf.xhrPath, Fetcher.middleware());
+app.use(Application.config.xhrPath, Fetcher.middleware());
 
 // Isomorphic Side
 app.use(function (req, res, next) {
   var fetcher = new Fetcher({
     req: req,
-    xhrPath: appConf.xhrPath,
+    xhrPath: Application.config.xhrPath,
   });
 
   var application = new Application({
