@@ -3,11 +3,15 @@
 var Application = require('./components/Application.jsx');
 var Context = require('./Context');
 var debug = require('debug')('Shoutbox:App');
+var MessagesStore = require('./stores/MessagesStore');
 var routes = require('./configs/routes');
+
+Context.registerStore(MessagesStore);
 
 function App(initialState) {
   debug('Creating App');
   this.context = new Context({
+        fetcher: initialState.fetcher,
         routes: routes
   });
   if (initialState) {

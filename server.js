@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 var debug = require('debug')('Shoutbox');
 var express = require('express');
 var expressState = require('express-state');
-var latest = require('./server/latest');
+var Fetcher = require('fetchr');
 var login = require('./middleware/login');
 var mongoose = require('mongoose');
 var MongoStore = require('./server/MongoStore');
@@ -70,44 +70,48 @@ app.use(bodyParser.urlencoded());
 app.use('/login', login);
 app.use(mybbSession);
 
-// Server side
-var router = new express.Router();
-router.route('/latest')
-  .get(latest);
-
-app.use(router);
+//Fetchers
+Fetcher.registerFetcher(require('./fetchers/messages'));
+app.use(appConf.xhrPath, Fetcher.middleware());
 
 // Isomorphic Side
 app.use(function (req, res, next) {
-    var application = new Application();
-    debug('Executing navigate action');
-    application.context.getActionContext().executeAction(navigateAction, {
-        session: req.session,
-        path: req.url,
-    }, function (err) {
-        if (err) {
-            if (err.status && err.status === 404) {
-                next();
-            } else {
-                next(err);
-            }
-            return;
-        }
-        debug('Rendering Application component');
-        var html = React.renderComponentToString(application.getComponent());
-        debug('Exposing context state');
-        res.expose(application.context.dehydrate(), 'Context');
-        debug('Rendering application into layout');
-        res.render('layout', {
-            html: html
-        }, function (err, markup) {
-            if (err) {
-                next(err);
-            }
-            debug('Sending markup');
-            res.send(markup);
-        });
+  var fetcher = new Fetcher({
+    req: req,
+    xhrPath: appConf.xhrPath,
+  });
+
+  var application = new Application({
+    fetcher: fetcher,
+  });
+  debug('Executing navigate action');
+  application.context.getActionContext().executeAction(navigateAction, {
+    session: req.session,
+    path: req.url,
+  }, function (err) {
+    if (err) {
+      if (err.status && err.status === 404) {
+        next();
+      } else {
+        next(err);
+      }
+      return;
+    }
+    debug('Rendering Application component');
+    var html = React.renderComponentToString(application.getComponent());
+    debug('Exposing context state');
+    res.expose(application.context.dehydrate(), 'Context');
+    debug('Rendering application into layout');
+    res.render('layout', {
+      html: html
+    }, function (err, markup) {
+      if (err) {
+        next(err);
+      }
+      debug('Sending markup');
+      res.send(markup);
     });
+  });
 });
 
 const PORT = process.env.PORT || 3030;
