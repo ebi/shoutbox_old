@@ -25,7 +25,10 @@
     "express-state": "^1.2.0",
     "fetchr": "^0.4.0",
     "flux-router-component": "^0.3.0",
+    "gulp": "^3.8.9",
+    "gulp-util": "^3.0.1",
     "jade": "^1.7.0",
+    "jsx-loader": "^0.11.2",
     "moment": "^2.8.3",
     "mongoose": "^3.8.18",
     "node-jsx": "^0.11.0",
@@ -35,12 +38,7 @@
     "rsvp": "^3.0.14",
     "sanitize-html": "^1.4.3",
     "superagent": "^0.20.0",
-    "underscore": "^1.7.0"
-  },
-  "devDependencies": {
-    "gulp": "^3.8.9",
-    "gulp-util": "^3.0.1",
-    "jsx-loader": "^0.11.2",
-    "webpack": "*"
+    "underscore": "^1.7.0",
+    "webpack": "^1.4.9"
   }
 }
