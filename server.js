@@ -133,8 +133,14 @@ app.use(function (req, res, next) {
       debug('Exposing context state');
       res.expose(application.context.dehydrate(), 'Context');
       debug('Rendering application into layout');
+
+      var scriptSrc = '/js/client.js';
+      if (process.env.NODE_ENV !== 'production') {
+        scriptSrc = 'http://localhost:8080' + scriptSrc;
+      }
       res.render('layout', {
-        html: html
+        html: html,
+        scriptSrc: scriptSrc,
       }, function (err, markup) {
         if (err) {
           next(err);
