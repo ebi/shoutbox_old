@@ -78,6 +78,14 @@ gulp.task('webpack-dev-server', function() {
   myConfig.devtool = 'eval';
   myConfig.debug = true;
 
+  myConfig.entry.unshift('webpack/hot/only-dev-server');
+  myConfig.entry.unshift('webpack-dev-server/client?http://localhost:8080');
+
+  myConfig.output.publicPath = 'http://localhost:8080/js/';
+  myConfig.module.loaders[0].loaders.unshift('react-hot');
+
+  myConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+
   // Start a webpack-dev-server
   new WebpackDevServer(webpack(myConfig), {
     publicPath: myConfig.output.publicPath,
