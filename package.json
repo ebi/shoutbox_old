@@ -42,5 +42,8 @@
     "superagent": "^0.20.0",
     "underscore": "^1.7.0",
     "webpack": "^1.4.9"
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^1.6.5"
   }
 }
