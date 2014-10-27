@@ -7,6 +7,7 @@ module.exports = function (req, res, next) {
 
   var redirect = function () {
     var url = req.session.originalUrl || '/';
+    delete req.session.originalUrl;
     debug('Session validated redirecting', url);
     return res.redirect(url);
   };
