@@ -80,7 +80,7 @@ gulp.task('webpack-dev-server', function() {
 
   // Start a webpack-dev-server
   new WebpackDevServer(webpack(myConfig), {
-    publicPath: '/' + myConfig.output.publicPath,
+    publicPath: myConfig.output.publicPath,
     contentBase: 'http://localhost:3030',
     stats: {
       colors: true
@@ -90,6 +90,6 @@ gulp.task('webpack-dev-server', function() {
       throw new gutil.PluginError('webpack-dev-server', err);
     }
     gutil.log('[webpack-dev-server]',
-              'http://localhost:8080/webpack-dev-server/index.html');
+              'http://localhost:8080/webpack-dev-server/');
   });
 });

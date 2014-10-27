@@ -1,14 +1,22 @@
+var webpack = require('webpack');
+
 module.exports = {
-    entry: "./client.js",
+    entry: [
+
+        './client.js',
+    ],
     output: {
         path: __dirname+'/build/js',
-        filename: "client.js"
+        filename: 'client.js',
+        publicPath: '/js',
     },
     module: {
         loaders: [
-            { test: /\.css$/, loader: "style!css" },
+            { test: /\.css$/, loader: 'style!css' },
             { test: /\.jsx$/, loader: 'jsx-loader' }
         ]
     },
-    plugins: [],
+    plugins: [
+        new webpack.HotModuleReplacementPlugin(),
+    ],
 };
