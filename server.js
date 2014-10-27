@@ -69,6 +69,9 @@ app.use(express.static(__dirname + '/build'));
 app.use(session({
   store: new RedisStore({ client: redis }),
   secret: appConf.secret,
+  cookie: {
+    secure: true,
+  },
 }));
 app.use(bodyParser.urlencoded());
 
