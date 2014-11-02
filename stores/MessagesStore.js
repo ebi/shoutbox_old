@@ -6,6 +6,7 @@ function MessagesStore(dispatcher) {
     this.dispatcher = dispatcher;
     this.messages = [];
     this.listeners = 0;
+    this.sendStatus = false;
 }
 
 MessagesStore.storeName = 'MessagesStore';
@@ -18,6 +19,9 @@ MessagesStore.handlers = {
     'REMOVE_SOCKET': 'removeSocket',
     'START_MESSAGE_LISTENER': 'addListener',
     'STOP_MESSAGE_LISTENER': 'removeListener',
+    'MESSAGE_SEND_START': 'sendStart',
+    'MESSAGE_SEND_SUCCESS': 'sendSuccess',
+    'MESSAGE_SEND_ERROR': 'sendError',
 };
 
 MessagesStore.prototype.receiveMessages = function receiveMessages (messages) {
@@ -31,6 +35,25 @@ MessagesStore.prototype.receiveMessages = function receiveMessages (messages) {
         this.messages.push(msg);
     }, this);
     this.emitChange();
+};
+
+MessagesStore.prototype.sendStart = function sendStart () {
+  this.sendStatus = 'progress';
+  this.emitChange();
+};
+
+MessagesStore.prototype.sendSuccess = function sendSuccess () {
+  this.sendStatus = 'success';
+  this.emitChange();
+};
+
+MessagesStore.prototype.sendError = function sendError () {
+  this.sendStatus = 'error';
+  this.emitChange();
+};
+
+MessagesStore.prototype.getSendStatus = function getSendStatus () {
+  return this.sendStatus;
 };
 
 MessagesStore.prototype.storeSocket = function storeSocket (socket) {

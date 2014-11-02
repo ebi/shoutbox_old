@@ -1,3 +1,4 @@
+var ChatLine = require('./ChatLine.jsx');
 var ChatMessage = require('./ChatMessage.jsx');
 var messageListener = require('../actions/messageListener');
 var MessagesStore = require('../stores/MessagesStore');
@@ -43,7 +44,10 @@ module.exports = React.createClass({
     }
     return (<div>
       <h1>Chat</h1>
-      {messages}
+      <ul>
+        {messages}
+      </ul>
+      <ChatLine context={this.props.context} />
     </div>);
   },
 });

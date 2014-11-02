@@ -1,6 +1,7 @@
 var _ = require('underscore');
 var cookie = require('cookie');
 var debug = require('debug')('Shoutbox:mybbSession');
+var raiseUrls = require('../configs/raiseUrls');
 var request = require('superagent');
 var RSVP = require('rsvp');
 
@@ -8,7 +9,7 @@ module.exports = function (username, password) {
   return new RSVP.Promise(function (resolve, reject) {
     debug('Login attemp for', username);
     request
-      .post('http://raise.ch/forum/member.php')
+      .post(raiseUrls.login)
       .type('form')
       .send({
         action: 'do_login',

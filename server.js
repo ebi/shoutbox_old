@@ -98,6 +98,7 @@ app.use(session({
   },
 }));
 app.use(bodyParser.urlencoded());
+app.use(Application.config.xhrPath, bodyParser.json());
 
 //Ensure Login
 app.use('/login', login);
