@@ -61,8 +61,6 @@ new MongoStore(amqpOpen)
 debug('Initializing server');
 var app = express();
 var server;
-var privateKey = fs.readFileSync('certs/server.key', 'utf8');
-var certificate = fs.readFileSync('certs/server.crt', 'utf8');
 try {
   var privateKey = fs.readFileSync('certs/server.key', 'utf8');
   var certificate = fs.readFileSync('certs/server.crt', 'utf8');
