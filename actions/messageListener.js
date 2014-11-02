@@ -18,7 +18,7 @@ MessageListener.startListening = function startListening (context, payload, done
   var socket = messageStore.getSocket();
   if (! socket) {
     debug('Creating new socket');
-    socket = SocketIO.connect();
+    socket = SocketIO.connect(null, { secure: true });
     socket.on('connect', function () {
       context.dispatch('CREATED_SOCKET', socket);
       context.dispatch('STARTED_MESSAGE_LISTENER');
