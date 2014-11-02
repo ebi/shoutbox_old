@@ -12,6 +12,7 @@ module.exports = React.createClass({
 
   componentDidMount: function() {
     this.MessagesStore.addChangeListener(this._OnStoreChange);
+    this.focus();
   },
 
   componentWillUnmount: function() {
@@ -27,10 +28,25 @@ module.exports = React.createClass({
     var state = {
       sendStatus: this.MessagesStore.getSendStatus(),
     };
-    if (oldStatus === 'progress' && state.sendStatus === 'success') {
-      state.message = '';
+    if (oldStatus === 'progress') {
+      if (state.sendStatus === 'success') {
+        state.message = '';
+      }
+
+      if (state.sendStatus !== 'progress') {
+        this.focus();
+      }
     }
     return state;
+  },
+
+  focus: function () {
+    if (this.refs.input) {
+      var node = this.refs.input.getDOMNode();
+      _.defer(function () {
+        node.focus();
+      });
+    }
   },
 
   _onInputChange: function _onInputChange (e) {
@@ -46,6 +62,8 @@ module.exports = React.createClass({
   render: function render () {
     return (<form onSubmit={this._onSubmit}>
       <input
+        ref="input"
+        autoFocus
         disabled={this.state.sendStatus === 'progress'}
         type="text"
         value={this.state.message}
