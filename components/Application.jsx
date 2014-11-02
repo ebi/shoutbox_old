@@ -1,5 +1,3 @@
-/** @jsx React.DOM */
-
 var Chat = require('./Chat.jsx');
 var Online = require('./Online.jsx');
 var React = require('react/addons');

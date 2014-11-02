@@ -153,7 +153,7 @@ app.use(function (req, res, next) {
 
     RSVP.all(waits).then(function () {
       debug('Rendering Application component');
-      var html = React.renderComponentToString(application.getComponent());
+      var html = React.renderToString(application.getComponent());
       debug('Exposing context state');
       res.expose(application.context.dehydrate(), 'Context');
       debug('Rendering application into layout');

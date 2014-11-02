@@ -1,6 +1,7 @@
 'use strict';
 
-var Application = require('./components/Application.jsx');
+var React = require('react/addons');
+var Application = React.createFactory(require('./components/Application.jsx'));
 var Context = require('./Context');
 var debug = require('debug')('Shoutbox:App');
 var ApplicationStore = require('./stores/ApplicationStore');

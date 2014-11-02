@@ -17,4 +17,4 @@ window.context = application.context;
 var app = application.getComponent();
 var mountNode = document.getElementById('app');
 
-React.renderComponent(app, mountNode);
+React.render(app, mountNode);

@@ -1,4 +1,3 @@
-/** @jsx React.DOM */
 var ChatMessage = require('./ChatMessage.jsx');
 var messageListener = require('../actions/messageListener');
 var MessagesStore = require('../stores/MessagesStore');
