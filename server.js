@@ -7,7 +7,9 @@ var debug = require('debug')('Shoutbox');
 var express = require('express');
 var expressState = require('express-state');
 var Fetcher = require('fetchr');
+var fs = require('fs');
 var http = require('http');
+var https = require('https');
 var login = require('./middleware/login');
 var MessageListener = require('./server/MessageListener');
 var mongoose = require('mongoose');
@@ -58,7 +60,19 @@ new MongoStore(amqpOpen)
 
 debug('Initializing server');
 var app = express();
-var server = http.createServer(app);
+var server;
+var privateKey = fs.readFileSync('certs/server.key', 'utf8');
+var certificate = fs.readFileSync('certs/server.crt', 'utf8');
+try {
+  var privateKey = fs.readFileSync('certs/server.key', 'utf8');
+  var certificate = fs.readFileSync('certs/server.crt', 'utf8');
+  var credentials = {key: privateKey, cert: certificate};
+  server = https.createServer(credentials, app);
+  debug('Creating HTTPS Server');
+} catch (e) {
+  debug('Creating HTTP Server');
+  server = http.createServer(app);
+}
 
 app.use(function(req, res, next) {
     res.setHeader('Strict-Transport-Security',
