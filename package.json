@@ -39,7 +39,7 @@
     "rsvp": "^3.0.14",
     "sanitize-html": "^1.4.3",
     "socket.io": "^1.2.0",
-    "socket.io": "^1.2.0",
+    "socket.io-client": "^1.2.0",
     "superagent": "^0.20.0",
     "underscore": "^1.7.0",
     "webpack": "^1.4.10",
