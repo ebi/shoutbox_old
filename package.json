@@ -33,6 +33,7 @@
     "mongoose": "^3.8.18",
     "node-jsx": "^0.11.0",
     "react": "^0.11.2",
+    "react-hot-loader": "^0.5.0",
     "redis": "^0.12.1",
     "routr": "0.0.4",
     "rsvp": "^3.0.14",
@@ -41,10 +42,7 @@
     "socket.io-client": "^1.1.0",
     "superagent": "^0.20.0",
     "underscore": "^1.7.0",
-    "webpack": "^1.4.9"
-  },
-  "devDependencies": {
-    "react-hot-loader": "^0.5.0",
+    "webpack": "^1.4.9",
     "webpack-dev-server": "^1.6.5"
   }
 }
