@@ -60,6 +60,18 @@ debug('Initializing server');
 var app = express();
 var server = http.createServer(app);
 
+app.use(function(req, res, next) {
+    res.setHeader('Strict-Transport-Security',
+                  'max-age=8640000; includeSubDomains');
+
+    var reqType = req.headers['x-forwarded-proto'];
+    if (req.connection.encrypted || reqType === 'https') {
+      next();
+    } else {
+      res.redirect(301, 'https://' + req.headers.host + req.url);
+    }
+});
+
 expressState.extend(app);
 app.set('state namespace', 'App');
 app.set('views', __dirname + '/templates');
