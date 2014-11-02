@@ -18,7 +18,6 @@ module.exports = function MessageListener (amqpOpen, socket) {
         channel.close();
       });
       amqpConf.messagesConsumer(channel, queue, function (channel, msg) {
-        console.log(msg);
         var messageObj = messageUtil.parse(msg);
         socket.emit('message', { messages: [messageObj] });
       });
