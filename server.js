@@ -60,6 +60,7 @@ new MongoStore(amqpOpen)
 
 debug('Initializing server');
 var app = express();
+app.enable('trust proxy');
 var server;
 try {
   var privateKey = fs.readFileSync('certs/server.key', 'utf8');
@@ -76,8 +77,7 @@ app.use(function(req, res, next) {
     res.setHeader('Strict-Transport-Security',
                   'max-age=8640000; includeSubDomains');
 
-    var reqType = req.headers['x-forwarded-proto'];
-    if (req.connection.encrypted || reqType === 'https') {
+    if (req.protocol === 'https') {
       next();
     } else {
       res.redirect(301, 'https://' + req.headers.host + req.url);
