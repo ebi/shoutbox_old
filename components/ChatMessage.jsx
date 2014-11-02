@@ -1,4 +1,5 @@
 var React = require('react/addons');
+var moment = require('moment');
 
 module.exports = React.createClass({
   props: {
@@ -7,7 +8,11 @@ module.exports = React.createClass({
 
   render: function render () {
     var message = this.props.message;
+    var time = moment.utc(message.time).local();
 
-    return <li>{message.message}</li>;
+    return (<li>
+      <span title={time.format()}>{time.format('HH:mm')} </span>
+      {message.username} - {message.message}
+    </li>);
   },
 });

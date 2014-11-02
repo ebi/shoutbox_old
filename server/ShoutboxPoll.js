@@ -54,7 +54,7 @@ var ShoutboxPoll = function (amqpOpen) {
           }
           var messageObj = {
             id: parsedMsg[1],
-            time: moment(parsedMsg[2], 'DD.MM - HH:mm'),
+            time: moment.utc(parsedMsg[2], 'DD.MM - HH:mm'),
             username: parsedMsg[3].replace(nameExtractRegexp, ''),
             message: parsedMsg[4],
           };
