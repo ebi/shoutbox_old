@@ -5,6 +5,7 @@ var util = require('util');
 function MessagesStore(dispatcher) {
     this.dispatcher = dispatcher;
     this.messages = [];
+    this.messageIds = [];
     this.listeners = 0;
     this.sendStatus = false;
 }
@@ -32,7 +33,10 @@ MessagesStore.prototype.receiveMessages = function receiveMessages (messages) {
     });
 
     msgs.forEach(function pushMessages (msg) {
-        this.messages.push(msg);
+        if (this.messageIds.indexOf(msg.id) === -1) {
+            this.messages.push(msg);
+            this.messageIds.push(msg.id);
+        }
     }, this);
     this.emitChange();
 };
