@@ -67,6 +67,7 @@ module.exports = React.createClass({
         disabled={this.state.sendStatus === 'progress'}
         type="text"
         value={this.state.message}
+        style={{width: '100%'}} // TODO: Replace
         onChange={this._onInputChange} />
     </form>);
   },
