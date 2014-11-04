@@ -7,6 +7,7 @@ var request = require('superagent');
 var RSVP = require('rsvp');
 
 var parseRegexp = /shout-(\d*)\'><td[^>]*><span[^>]*>&raquo; &nbsp;&nbsp;(\d{2}\.\d{2} - \d{2}:\d{2})\s*- <\/span><span[^>]*> (.*?):<\/span><\/td><td[^>]*><\/span[^>]*>(.*?)<\/span><\/td><\/tr>/; // jshint ignore:line
+var linkRe = new RegExp('<a href="([^"]*).*</a>', 'g');
 var nameExtractRegexp = /<.*?>/g;
 
 function publishMessage(channel, message) {
@@ -52,11 +53,12 @@ var ShoutboxPoll = function (amqpOpen) {
             debug('Could not parse message', message);
             return;
           }
+          var msg = parsedMsg[4].replace(linkRe, '$1');
           var messageObj = {
             id: parsedMsg[1],
             time: moment.utc(parsedMsg[2], 'DD.MM - HH:mm'),
             username: parsedMsg[3].replace(nameExtractRegexp, ''),
-            message: parsedMsg[4],
+            message: msg,
           };
           publishMessage(channel, messageObj);
         });
