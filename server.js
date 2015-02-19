@@ -1,3 +1,4 @@
+require('newrelic');
 require('node-jsx').install({ extension: '.jsx' });
 
 var appConf = require('./configs/app');
