@@ -1,4 +1,5 @@
 build
 certs
+newrelic_agent.log
 node_modules
 sample_responses
