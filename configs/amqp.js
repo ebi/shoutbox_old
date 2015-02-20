@@ -37,7 +37,7 @@ function messagesConsumer(channel, queue, cb) {
     }, debug)
     .then(function (queue) {
       debug('Consuming queue');
-      channel.consume(queue, cb.bind(null, channel));
+      channel.consume(queue, cb.bind(null, channel), queue.options);
     }, debug);
 }
 
