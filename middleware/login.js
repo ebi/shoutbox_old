@@ -1,7 +1,7 @@
 var debug = require('debug')('Shoutbox:Login');
 var mybbSession = require('../server/mybbSession');
 
-module.exports = function (req, res, next) {
+module.exports = function (req, res) {
   var user = req.body.username;
   var pass = req.body.password;
 
@@ -28,6 +28,7 @@ module.exports = function (req, res, next) {
     });
   };
 
+  debug('Session state', req.session.validated);
   if (req.session.validated) {
     redirect();
   }
@@ -35,10 +36,11 @@ module.exports = function (req, res, next) {
   if (req.method === 'POST') {
     mybbSession(user, pass)
       .then(function (mybb) {
+        debug('Login successfull');
         req.session.mybbuser = mybb.mybbuser;
         req.session.sid = mybb.sid;
         req.session.validated = true;
-        next();
+        redirect();
       }, renderForm);
   } else {
     renderForm();
