@@ -3,6 +3,7 @@ var appConf = require('../configs/app');
 var debug = require('debug')('Shoutbox:ShoutboxPoll');
 var moment = require('moment');
 var mybbSession = require('./mybbSession.js');
+var newrelic = require('newrelic');
 var request = require('superagent');
 var RSVP = require('rsvp');
 
@@ -34,11 +35,8 @@ var ShoutboxPoll = function (amqpOpen) {
     var channel = args[0];
     var mybb = args[1];
     debug('Polling', lastId);
-    request
-      .get(baseUrl + lastId)
-      .set('Cookie', 'mybbuser=' + mybb.mybbuser + '; sid=' + mybb.sid)
-      .on('error', debug)
-      .end(function (mybb, result) {
+
+    var requestCb = function (mybb, result) {
         if (! result.text) {
           // TODO: Reconnect
           throw new Error('Got now response…');
@@ -65,7 +63,14 @@ var ShoutboxPoll = function (amqpOpen) {
         if (!process.env.NOPOLL) {
           setTimeout(startPoll.bind(this, args), 250);
         }
-      }.bind(this, mybb));
+        newrelic.endTransaction();
+      }.bind(this, mybb);
+
+    request
+      .get(baseUrl + lastId)
+      .set('Cookie', 'mybbuser=' + mybb.mybbuser + '; sid=' + mybb.sid)
+      .on('error', debug)
+      .end(newrelic.createBackgroundTransaction('poll-message', requestCb));
   }
 
 
