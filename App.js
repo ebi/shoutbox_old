@@ -14,8 +14,8 @@ Context.registerStore(MessagesStore);
 function App(initialState) {
   debug('Creating App');
   this.context = new Context({
-        fetcher: initialState.fetcher,
-        routes: routes
+    fetcher: initialState.fetcher,
+    routes: routes,
   });
   if (initialState) {
     debug('Rehydrating context');

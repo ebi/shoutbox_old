@@ -97,8 +97,10 @@ app.use(session({
   cookie: {
     secure: true,
   },
+  saveUninitialized: false,
+  resave: false,
 }));
-app.use(bodyParser.urlencoded());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(Application.config.xhrPath, bodyParser.json());
 
 //Ensure Login
@@ -127,12 +129,13 @@ app.use(function (req, res, next) {
   var application = new Application({
     fetcher: fetcher,
   });
-  debug('Executing navigate action');
+  debug('Executing navigate action', req.url);
   application.context.getActionContext().executeAction(navigateAction, {
     session: req.session,
-    path: req.url,
+    url: req.url,
   }, function (err) {
     if (err) {
+      debug('Navigate action error', err);
       if (err.status && err.status === 404) {
         next();
       } else {
@@ -164,6 +167,7 @@ app.use(function (req, res, next) {
       if (process.env.NODE_ENV !== 'production') {
         scriptSrc = 'http://localhost:8080' + scriptSrc;
       }
+
       res.render('layout', {
         html: html,
         scriptSrc: scriptSrc,
