@@ -37,34 +37,40 @@ var ShoutboxPoll = function (amqpOpen) {
     debug('Polling', lastId);
 
     var requestCb = function (mybb, result) {
-        if (! result.text) {
-          // TODO: Reconnect
-          throw new Error('Got now response…');
-        }
-        debug('Got response for', lastId);
-        var response = result.text.split('^--^');
-        lastId = response[0];
-        var messages = response[2].split('<tr id=\'');
-        messages.forEach(function (message) {
-          var parsedMsg = parseRegexp.exec(message);
-          if (!parsedMsg) {
-            debug('Could not parse message', message);
-            return;
+      var rePoll = function () {
+          if (!process.env.NOPOLL) {
+            setTimeout(startPoll.bind(this, args), 250);
           }
-          var msg = parsedMsg[4].replace(linkRe, '$1');
-          var messageObj = {
-            id: parsedMsg[1],
-            time: moment.utc(parsedMsg[2], 'DD.MM - HH:mm'),
-            username: parsedMsg[3].replace(nameExtractRegexp, ''),
-            message: msg,
-          };
-          publishMessage(channel, messageObj);
-        });
-        if (!process.env.NOPOLL) {
-          setTimeout(startPoll.bind(this, args), 250);
+        }.bind(this);
+
+      if (! result.text) {
+        // TODO: Reconnect
+        newrelic.noticeError('Shoutbox did not give any response');
+        throw new Error('Got no response…');
+      }
+      debug('Got response for', lastId);
+      var response = result.text.split('^--^');
+      lastId = response[0];
+      var messages = response[2].split('<tr id=\'');
+      messages.forEach(function (message) {
+        var parsedMsg = parseRegexp.exec(message);
+        if (!parsedMsg) {
+          newrelic.noticeError('Could not parse message ' + message);
+          debug('Could not parse message', message);
+          return;
         }
-        newrelic.endTransaction();
-      }.bind(this, mybb);
+        var msg = parsedMsg[4].replace(linkRe, '$1');
+        var messageObj = {
+          id: parsedMsg[1],
+          time: moment.utc(parsedMsg[2], 'DD.MM - HH:mm'),
+          username: parsedMsg[3].replace(nameExtractRegexp, ''),
+          message: msg,
+        };
+        publishMessage(channel, messageObj);
+      });
+      rePoll();
+      newrelic.endTransaction();
+    }.bind(this, mybb);
 
     request
       .get(baseUrl + lastId)
