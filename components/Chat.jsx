@@ -42,9 +42,8 @@ module.exports = React.createClass({
     if (messages.length === 0) {
       messages = <div>Loading…</div>;
     }
-    return (<div>
-      <h1>Chat</h1>
-      <ul>
+    return (<div className="chatWindow">
+      <ul className="messages">
         {messages}
       </ul>
       <ChatLine context={this.props.context} />

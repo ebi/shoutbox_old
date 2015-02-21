@@ -60,7 +60,7 @@ module.exports = React.createClass({
   },
 
   render: function render () {
-    return (<form onSubmit={this._onSubmit}>
+    return (<form onSubmit={this._onSubmit} className="chatLine">
       <input
         ref="input"
         autoFocus

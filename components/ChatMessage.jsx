@@ -6,6 +6,10 @@ module.exports = React.createClass({
       message: React.PropTypes.object,
   },
 
+  componentDidMount: function () {
+    this.getDOMNode().scrollIntoView(false);
+  },
+
   render: function render () {
     var message = this.props.message;
     var time = moment.utc(message.time).local();

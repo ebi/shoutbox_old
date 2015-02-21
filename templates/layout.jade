@@ -5,6 +5,30 @@ html
     meta(name="viewport", content="width=device-width, initial-scale=1")
     title Raise.ch Better Shoutbox
     style(type='text/css').
+      * {
+        box-sizing: border-box;
+      }
+
+      html, body, #app, .chatWindow, .messages {
+        height: 100%
+      }
+      html, body {
+        overflow: hidden;
+      }
+      .messages {
+        position: relative;
+        bottom: 50px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        padding-left: 0;
+        list-style-type: none;
+        padding-top: 50px;
+      }
+      .chatLine {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
       body {
         font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
       }
