@@ -54,6 +54,9 @@ var ShoutboxPoll = function (amqpOpen) {
       lastId = response[0];
       var messages = response[2].split('<tr id=\'');
       messages.forEach(function (message) {
+        if (message === '') {
+          return;
+        }
         var parsedMsg = parseRegexp.exec(message);
         if (!parsedMsg) {
           newrelic.noticeError('Could not parse message ' + message);
