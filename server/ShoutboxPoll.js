@@ -44,11 +44,12 @@ var ShoutboxPoll = function (amqpOpen) {
         }.bind(this);
 
       if (! result.text) {
-        // TODO: Reconnect
         newrelic.noticeError('Shoutbox did not give any response');
-        throw new Error('Got no response…');
+        debug('Shoutbox did not give any response');
+        rePoll();
       }
       debug('Got response for', lastId);
+      newrelic.recordCustomEvent('shoutbox-response', result);
       var response = result.text.split('^--^');
       lastId = response[0];
       var messages = response[2].split('<tr id=\'');
@@ -69,14 +70,13 @@ var ShoutboxPoll = function (amqpOpen) {
         publishMessage(channel, messageObj);
       });
       rePoll();
-      newrelic.endTransaction();
     }.bind(this, mybb);
 
     request
       .get(baseUrl + lastId)
       .set('Cookie', 'mybbuser=' + mybb.mybbuser + '; sid=' + mybb.sid)
       .on('error', debug)
-      .end(newrelic.createBackgroundTransaction('poll-message', requestCb));
+      .end(requestCb);
   }
 
 
