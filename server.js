@@ -93,6 +93,7 @@ app.set('state namespace', 'App');
 app.set('views', __dirname + '/templates');
 app.set('view engine', 'jade');
 
+app.use(express.static(__dirname + '/static'));
 app.use(express.static(__dirname + '/build'));
 app.use(session({
   store: new RedisStore({ client: redis }),
