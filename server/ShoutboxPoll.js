@@ -49,7 +49,7 @@ var ShoutboxPoll = function (amqpOpen) {
         rePoll();
       }
       debug('Got response for', lastId);
-      newrelic.recordCustomEvent('shoutbox-response', result);
+      newrelic.recordCustomEvent('shoutboxResponse', result);
       var response = result.text.split('^--^');
       lastId = response[0];
       var messages = response[2].split('<tr id=\'');
