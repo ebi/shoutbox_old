@@ -1,3 +1,4 @@
+/*global window*/
 var _ = require('underscore');
 var messageSend = require('../actions/messageSend');
 var React = require('react/addons');
@@ -13,10 +14,12 @@ module.exports = React.createClass({
   componentDidMount: function() {
     this.MessagesStore.addChangeListener(this._OnStoreChange);
     this.focus();
+    window.addEventListener('focus', this.focus);
   },
 
   componentWillUnmount: function() {
     this.MessagesStore.removeChangeListener(this._OnStoreChange);
+    window.removeEventListener('focus', this.focus);
   },
 
   _OnStoreChange: function _OnStoreChange () {
