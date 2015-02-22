@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "amqplib": "^0.3.1",
+    "autolinker": "^0.15.2",
     "body-parser": "^1.12.0",
     "connect-redis": "^2.2.0",
     "cookie": "^0.1.2",

@@ -1,3 +1,4 @@
+var Autolinker = require('autolinker');
 var React = require('react/addons');
 var moment = require('moment');
 
@@ -13,10 +14,13 @@ module.exports = React.createClass({
   render: function render () {
     var message = this.props.message;
     var time = moment.utc(message.time).local();
+    var msg = Autolinker.link(message.message, {
+      twitter: false,
+    });
 
     return (<li>
       <span title={time.format()}>{time.format('HH:mm')} </span>
-      {message.username} - {message.message}
+      {message.username} - <span dangerouslySetInnerHTML={{__html: msg}} />
     </li>);
   },
 });
