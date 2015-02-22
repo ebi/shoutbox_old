@@ -100,6 +100,7 @@ app.use(session({
   secret: appConf.secret,
   cookie: {
     secure: true,
+    maxAge: 31536000,
   },
   saveUninitialized: false,
   resave: false,
