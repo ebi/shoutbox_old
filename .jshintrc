@@ -9,7 +9,6 @@
   "funcscope": true,
   "indent": 2,
   "maxdepth": 3,
-  "maxlen": 80,
   "maxstatements": 15,
   "newcap": true,
   "noarg": true,
