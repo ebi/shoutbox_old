@@ -1,3 +1,4 @@
+var _ = require('underscore');
 var debug = require('debug')('Shoutbox:MessagesStore');
 var BaseStore = require('dispatchr/utils/BaseStore');
 var util = require('util');
@@ -107,7 +108,7 @@ MessagesStore.prototype.lastID = function lastId () {
 };
 
 MessagesStore.prototype.getAllMessages = function getAllMessages () {
-    return this.messages;
+    return _.clone(this.messages);
 };
 
 MessagesStore.prototype.dehydrate = function dehydrate () {

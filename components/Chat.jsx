@@ -1,3 +1,5 @@
+/*global window, Notification*/
+var _ = require('underscore');
 var ChatLine = require('./ChatLine.jsx');
 var ChatMessage = require('./ChatMessage.jsx');
 var messageListener = require('../actions/messageListener');
@@ -24,11 +26,43 @@ module.exports = React.createClass({
       this.props.context.executeAction(showChat);
     }
     this.props.context.executeAction(messageListener.startListening);
+    if (Notification) {
+      Notification.requestPermission(function () {
+        this._notification = true;
+        window.addEventListener('blur', this.blur);
+        window.addEventListener('focus', this.focus);
+      }.bind(this));
+    }
   },
 
   componentWillUnmount: function() {
     this.MessagesStore.removeChangeListener(this._onChange);
     this.props.context.executeAction(messageListener.stopListening);
+    window.removeEventListener('blur', this.blur);
+    window.removeEventListener('focus', this.focus);
+  },
+
+  blur: function () {
+    this._blur = true;
+  },
+
+  focus: function () {
+    this._blur = false;
+  },
+
+  componentWillUpdate: function (nextProps, nextState) {
+    // Poor mans new message
+    if (this._notification && this._blur) {
+      var oldLastMessage = _.clone(this.state.messages).pop();
+      var oldLastMessageId = parseInt(oldLastMessage.id, 10);
+      var newLastMessage = _.clone(nextState.messages).pop();
+      var newLastMessageId = parseInt(newLastMessage.id, 10);
+      if (oldLastMessageId !== newLastMessageId) {
+        new Notification('New message from ' + newLastMessage.username, {
+          body: newLastMessage.message,
+        });
+      }
+    }
   },
 
   _onChange: function() {
