@@ -48,6 +48,10 @@ module.exports = React.createClass({
 
   focus: function () {
     this._blur = false;
+    if (this._note) {
+      this._note.close();
+      this._note = null;
+    }
   },
 
   componentWillUpdate: function (nextProps, nextState) {
@@ -58,9 +62,8 @@ module.exports = React.createClass({
       var newLastMessage = _.clone(nextState.messages).pop();
       var newLastMessageId = parseInt(newLastMessage.id, 10);
       if (oldLastMessageId !== newLastMessageId) {
-        new Notification('New message from ' + newLastMessage.username, {
-          body: newLastMessage.message,
-        });
+        this._note = new Notification('New message');
+        this._blur = false; // Prevent further messages
       }
     }
   },
