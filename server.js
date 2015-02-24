@@ -31,8 +31,8 @@ if (process.env.REDISTOGO_URL) {
   redis.auth(rtg.auth.split(':')[1]);
 } else {
   var redis = require('redis').createClient();
-  redis.on('error', newrelic.noticeError);
 }
+redis.on('error', newrelic.noticeError);
 var RedisStore = require('connect-redis')(session);
 
 debug('Setting up rabbitmq');
@@ -99,6 +99,7 @@ app.use(session({
   store: new RedisStore({ client: redis }),
   secret: appConf.secret,
   cookie: {
+    httpOnly: false,
     secure: true,
     maxAge: 31536000,
   },
