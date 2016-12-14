@@ -77,7 +77,7 @@ app.use(function(req, res, next) {
     res.setHeader('Strict-Transport-Security',
                   'max-age=8640000; includeSubDomains');
 
-    if (req.protocol === 'https') {
+    if (req.protocol === 'https' || process.env.NO_SECURE) {
       next();
     } else {
       res.redirect(301, 'https://' + req.headers.host + req.url);
