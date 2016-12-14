@@ -1,7 +1,7 @@
 var _ = require('underscore');
 var debug = require('debug')('Shoutbox:messagesFetcher');
 var Message = require('../models/Message');
-var raiseUrls = require('../configs/raiseUrls');
+var urls = require('../configs/urls');
 var request = require('superagent');
 
 module.exports = {
@@ -35,7 +35,7 @@ module.exports = {
     var sid = req.session.sid;
 
     request
-      .post(raiseUrls.postMessage)
+      .post(urls.postMessage)
       .type('form')
       .set('Cookie', 'mybbuser=' + user + '; sid=' + sid)
       .send({

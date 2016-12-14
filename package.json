@@ -1,5 +1,5 @@
 {
-  "name": "raisech-shoutbox",
+  "name": "mybb-shoutbox",
   "version": "0.0.0",
   "description": "Better client for the shoutbox",
   "main": "server.js",

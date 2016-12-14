@@ -6,6 +6,7 @@ var mybbSession = require('./mybbSession.js');
 var newrelic = require('newrelic');
 var request = require('superagent');
 var RSVP = require('rsvp');
+var urls = require('../configs/urls');
 
 var parseRegexp = /shout-(\d*)\'><td[^>]*><span[^>]*>&raquo; &nbsp;&nbsp;(\d{2}\.\d{2} - \d{2}:\d{2})\s*- <\/span><span[^>]*> (.*?):<\/span><\/td><td[^>]*><\/span[^>]*>(.*?)<\/span><\/td><\/tr>/; // jshint ignore:line
 var linkRe = new RegExp('<a href="([^"]*).*</a>', 'g');
@@ -24,7 +25,7 @@ var ShoutboxPoll = function (amqpOpen) {
   debug('Initializing ShoutboxPoll');
 
   var lastId = 0;
-  var baseUrl = 'http://raise.ch/forum/xmlhttp.php?action=show_shouts&last_id=';
+  var baseUrl = urls.pollUrl;
 
   function getSession () {
     return mybbSession(process.env.RAISE_POLL_USER,
