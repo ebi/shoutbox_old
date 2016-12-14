@@ -3,7 +3,6 @@ var appConf = require('../configs/app');
 var debug = require('debug')('Shoutbox:ShoutboxPoll');
 var moment = require('moment');
 var mybbSession = require('./mybbSession.js');
-var newrelic = require('newrelic');
 var request = require('superagent');
 var RSVP = require('rsvp');
 var urls = require('../configs/urls');
@@ -45,12 +44,10 @@ var ShoutboxPoll = function (amqpOpen) {
         }.bind(this);
 
       if (! result.text) {
-        newrelic.noticeError('Shoutbox did not give any response');
         debug('Shoutbox did not give any response');
         rePoll();
       }
       debug('Got response for', lastId);
-      newrelic.recordCustomEvent('shoutboxResponse', result);
       var response = result.text.split('^--^');
       lastId = response[0];
       var messages = response[2].split('<tr id=\'');
@@ -60,7 +57,6 @@ var ShoutboxPoll = function (amqpOpen) {
         }
         var parsedMsg = parseRegexp.exec(message);
         if (!parsedMsg) {
-          newrelic.noticeError('Could not parse message ' + message);
           debug('Could not parse message', message);
           return;
         }

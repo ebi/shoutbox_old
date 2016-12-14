@@ -1,4 +1,3 @@
-var newrelic = require('newrelic');
 require('node-jsx').install({ extension: '.jsx' });
 
 var appConf = require('./configs/app');
@@ -32,14 +31,12 @@ if (process.env.REDISTOGO_URL) {
 } else {
   var redis = require('redis').createClient();
 }
-redis.on('error', newrelic.noticeError);
 var RedisStore = require('connect-redis')(session);
 
 debug('Setting up rabbitmq');
 var amqpUrl = process.env.CLOUDAMQP_URL || 'amqp://localhost';
 var amqpOpen = require('amqplib').connect(amqpUrl)
   .then(null, function () {
-    newrelic.noticeError('Could not connect to rabbitmq.');
     debug('Could not connect to rabbitmq.');
     process.exit(1);
   });
@@ -48,7 +45,6 @@ debug('Setting up MongoDB');
 var mongoUrl = process.env.MONGOHQ_URL || 'mongodb://localhost/shoutbox';
 mongoose.connect(mongoUrl, function (err) {
   if (err) {
-    newrelic.noticeError('Could not connect to MongoDB');
     debug('Could not connect to MongoDB');
   } else {
     debug('Setup MongoDB');
@@ -153,7 +149,6 @@ app.use(function (req, res, next) {
     var context = application.context;
     var appStore = context.dispatcher.getStore('ApplicationStore');
     var pageName = appStore.getCurrentPageName();
-    newrelic.setTransactionName(pageName);
     var currentRoute = routes[pageName];
     var waits = [];
 
